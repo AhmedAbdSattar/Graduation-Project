@@ -62,8 +62,8 @@ class reportLists {
 showInfo showinfo = showInfo();
 var view ;
     return Container(
-      height: Status== false?150:180,
-      width: size.width,
+     // height: Status== false?190:200,
+     // width: size.width,
       margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
       decoration: BoxDecoration(
           borderRadius: BorderRadius.all(Radius.circular(20.0)),
@@ -71,7 +71,7 @@ var view ;
           boxShadow: [
             BoxShadow(color: Colors.black.withAlpha(100), blurRadius: 10.0),
           ]),
-      child: Padding(
+      child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 10),
         child: Column(
           children: [
@@ -89,13 +89,14 @@ var view ;
                 Row(
                   children: <Widget>[
                     Container(
-                      width: categoryWidth,
+                      width: size.width/2,
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: <Widget>[
                           Text(
                             item_type,
+                            overflow: TextOverflow.clip,
                             style: const TextStyle(
                                 fontSize: 20,
                                 fontWeight: FontWeight.bold,
@@ -104,28 +105,25 @@ var view ;
                           SizedBox(height: 5),
                           Text(
                             item_brand,
+                            overflow: TextOverflow.clip,
                             style: const TextStyle(
                                 fontSize: 18, color: Colors.black),
                           ),
                           SizedBox(height: 5),
-                          Row(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              Text(
-                                location,
-                                style: const TextStyle(
-                                    fontSize: 13, color: Colors.grey),
-                              ),
-                              SizedBox(
-                                width: 10,
-                              ),
-                              Text(
-                                date,
-                                style: const TextStyle(
-                                    fontSize: 10, color: Colors.grey),
-                              ),
-                            ],
+                          Text(
+                            location,
+                            overflow: TextOverflow.clip,
+                            style: const TextStyle(
+                                fontSize: 13, color: Colors.grey),
+                          ),
+                          SizedBox(
+                            height: 3,
+                          ),
+                          Text(
+                            date,
+                            overflow: TextOverflow.clip,
+                            style: const TextStyle(
+                                fontSize: 10, color: Colors.grey),
                           ),
                           SizedBox(
                             height: 10,
@@ -199,10 +197,7 @@ var view ;
                       padding: EdgeInsets.fromLTRB(20, 15, 20, 15),
                       onPressed: () {
                         deleteReportClass.deleteReport(context,reportid,reportType);
-                        Navigator.pushAndRemoveUntil(
-                            (context),
-                            MaterialPageRoute(builder: (context) => matchedReports()),
-                                (route) => false);
+                        Navigator.of(context).pop();
                       },
                       child: Text(
                         "yes",
@@ -216,10 +211,7 @@ var view ;
                   child: MaterialButton(
                       padding: EdgeInsets.fromLTRB(20, 15, 20, 15),
                       onPressed: () {
-                        Navigator.pushAndRemoveUntil(
-                            (context),
-                            MaterialPageRoute(builder: (context) => matchedReports()),
-                                (route) => false);
+                        Navigator.of(context).pop();
                       },
                       child: Text(
                         "Cancel",

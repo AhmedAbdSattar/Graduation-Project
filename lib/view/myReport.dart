@@ -141,11 +141,7 @@ class _myReportState extends State<myReport> {
                                     deleteReportClass.deleteReport(
                                         context, element['reportId'],
                                         element['Reportkind']);
-                                    Navigator.pushAndRemoveUntil(
-                                        (context),
-                                        MaterialPageRoute(
-                                            builder: (context) => myReport()),
-                                            (route) => false);
+                                    Navigator.of(context).pop();
                                   },
                                   child: Text(
                                     "Delete",
@@ -163,11 +159,7 @@ class _myReportState extends State<myReport> {
                                   padding: EdgeInsets.fromLTRB(
                                       20, 15, 20, 15),
                                   onPressed: () {
-                                    Navigator.pushAndRemoveUntil(
-                                        (context),
-                                        MaterialPageRoute(
-                                            builder: (context) => myReport()),
-                                            (route) => false);
+                                    Navigator.of(context).pop();
                                   },
                                   child: Text(
                                     "Cancel",

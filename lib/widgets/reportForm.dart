@@ -12,6 +12,7 @@ import 'package:scroll_date_picker/scroll_date_picker.dart';
 import '../model/foundReports.dart';
 import '../model/users.dart';
 import '../view/home.dart';
+import 'postForm.dart';
 
 class reportForm extends StatefulWidget {
 
@@ -1009,283 +1010,320 @@ var selectedType = null;
 var selectedBrand = null;
 var selectedColor = null ;
 DateTime selectedDate = DateTime.now();
-
+final formKey2 =   GlobalKey<FormState>();
 class _reportFormState extends State<reportForm> {
   @override
   Widget build(BuildContext context) {
     return ListView(
       padding: EdgeInsets.all(20.0),
       children: [
-        DropdownButton<String>(
-          dropdownColor: Colors.teal,
-          hint: Text('Category'),
-          value: CategorySelected,
-          isExpanded: true,
-          items: categories.map((String value) {
-            return DropdownMenuItem<String>(
-              value: value,
-              child: Text(value),
-            );
-          }).toList(),
-          onChanged: (category) {
-            if (category == 'Electronics') {
-              types = electronicsTypes;
-            } else if (category == 'Cards') {
-              types = cardsTypes;
-            } else if (category == 'Clothes & Accessories') {
-              idNumber.text = 'unhave';
-              types = clothesAccessoriesTypes;
-            } else if (category == 'Sports Accessories') {
-              idNumber.text = 'unhave';
-              types = sportsAccessoriesTypes;
-            } else if (category == 'Pets') {
-              idNumber.text = 'unhave';
-              types = petsTypes;
-            } else {
-              types = [];
-            }
-            setState(() {
-              selectedType = null;
-              selectedBrand = null;
-              CategorySelected = category;
-            });
-          },
-        ),
-        DropdownButton<String>(
-          dropdownColor: Colors.teal,
-          hint: Text('Type'),
-          value: selectedType,
-          isExpanded: true,
-          items: types.map((String value) {
-            return DropdownMenuItem<String>(
-              value: value,
-              child: Text(value),
-            );
-          }).toList(),
-          onChanged: (type) {
-            if (type == 'Stop watch' || type == 'Smart Watch') {
-              brands = stopSmartwatch;
-            } else if (type == 'charger') {
-              brands = chargerTypes;
-            } else if (type == 'Calculator') {
-              brands = calculatorbrands;
-            } else if (type == 'Dvd player') {
-              brands = dvdPlayer;
-            } else if (type == 'Camera') {
-              brands = cameraBrand;
-            } else if (type == 'Earphones') {
-              brands = earphonesBrands;
-            } else if (type == 'Smartphone' ||
-                type == 'iPod' ||
-                type == 'Tablet') {
-              brands = smartPhoneTabletBrands;
-            } else if (type == 'Microphone' || type == 'Radio') {
-              brands = microphoneRadio;
-            } else if (type == 'Laptop' || type == 'Mouse') {
-              brands = laptopMouseBrands;
-            } else if (type == 'Stop watch' || type == 'Smart Watch') {
-              brands = stopSmartwatch;
-            } else if (type == 'Id card' || type == 'Passport') {
-              brands = idcardBrands;
-            } else if (type == 'Health Card' || type == 'Transport Card') {
-              brands = healthTransportCard;
-            } else if (type == 'Credit card') {
-              brands = creditCardBrands;
-            } else if (type == 'Driving License') {
-              brands = drivingCards;
-            } else if (clothesAccessoriesTypes.contains(type)) {
-              brands = clothesAccessoriesBrands;
-            } else if (sportsAccessoriesTypes.contains(type)) {
-              brands = sportsAccessoriesBrands;
-            } else if (type == 'Cats') {
-              brands = catsBrands;
-            } else if (type == 'Dogs') {
-              brands = dogsBrands;
-            } else if (type == 'Birds') {
-              brands = birdsBrands;
-            } else if (type == 'Rabbits') {
-              brands = rabbits;
-            } else if (type == 'Horses') {
-              brands = horses;
-            } else if (type == 'Turtles') {
-              brands = turtles;
-            } else if (type == 'Fish') {
-              brands = fish;
-            } else if (type == 'Pigs') {
-              brands = pigs;
-            } else if (type == 'Rats and Mice') {
-              brands = ratsAndMice;
-            } else {
-              brands = [];
-            }
-            setState(() {
-              selectedBrand = null;
-              selectedType = type;
-            });
-          },
-        ),
-        DropdownButton<String>(
-          dropdownColor: Colors.teal,
-          hint: Text('Brand/Id'),
-          value: selectedBrand,
-          isExpanded: true,
-          items: brands.map((String value) {
-            return DropdownMenuItem<String>(
-              value: value,
-              child: Text(value),
-            );
-          }).toList(),
-          onChanged: (brand) {
-            setState(() {
-              selectedBrand = brand;
-            });
-          },
-        ),
-        Visibility(
-          visible:
-              CategorySelected == 'Cards' || CategorySelected == 'Electronics'
-                  ? true
-                  : false,
-          child: TextFormField(
-            autofocus: false,
-            controller: idNumber,
-            keyboardType: TextInputType.name,
-            validator: (value) {
-              if (value!.isEmpty) {
-                return null;
-              }
-              return null;
-            },
-            onSaved: (value) {
-              idNumber.text = value!;
-            },
-            textInputAction: TextInputAction.next,
-            decoration: InputDecoration(
-              prefixIcon: Icon(Icons.tag),
-              hintText: CategorySelected == 'Cards'
-                  ? 'Enter Your Id Number'
-                  : 'Enter serial Number',
-            ),
-          ),
-        ),
-        // gov Dropdown
-        DropdownButton<String>(
-          dropdownColor: Colors.teal,
-          hint: Text('Governorate'),
-          value: selectedGovernorate,
-          isExpanded: true,
-          items: gov.map((String value) {
-            return DropdownMenuItem<String>(
-              value: value,
-              child: Text(value),
-            );
-          }).toList(),
-          onChanged: (governorate) {
-            if (governorate == 'Cairo') {
-              regions = cairo;
-            } else if (governorate == 'Giza') {
-              regions = giza;
-            } else if (governorate == 'Alexandria') {
-              regions = alexandria;
-            } else if (governorate == 'Dakahlia') {
-              regions = dakahlia;
-            } else if (governorate == 'Red Sea') {
-              regions = redSea;
-            } else if (governorate == 'Beheira') {
-              regions = beheira;
-            } else if (governorate == 'Fayoum') {
-              regions = fayoum;
-            } else if (governorate == 'Gharbiya') {
-              regions = gharbiya;
-            } else if (governorate == 'Ismailia') {
-              regions = ismailia;
-            } else if (governorate == 'Menofia') {
-              regions = menofia;
-            } else if (governorate == 'Minya') {
-              regions = minya;
-            } else if (governorate == 'Qaliubiya') {
-              regions = qaliubiya;
-            } else if (governorate == 'New Valley') {
-              regions = newValley;
-            } else if (governorate == 'Suez') {
-              regions = suez;
-            } else if (governorate == 'Aswan') {
-              regions = aswan;
-            } else if (governorate == 'Assiut') {
-              regions = assiut;
-            } else if (governorate == 'Beni Suef') {
-              regions = beniSuef;
-            } else if (governorate == 'Port Said') {
-              regions = portSaid;
-            } else if (governorate == 'Damietta') {
-              regions = damietta;
-            } else if (governorate == 'Sharkia') {
-              regions = sharkia;
-            } else if (governorate == 'South Sinai') {
-              regions = southSinai;
-            } else if (governorate == 'Kafr Al sheikh') {
-              regions = kafrAlsheikh;
-            } else if (governorate == 'Matrouh') {
-              regions = matrouh;
-            } else if (governorate == 'Luxor') {
-              regions = luxor;
-            } else if (governorate == 'Qena') {
-              regions = qena;
-            } else if (governorate == 'North Sinai') {
-              regions = northSinai;
-            } else if (governorate == 'Sohag') {
-              regions = sohag;
-            } else {
-              regions = [];
-            }
-            setState(() {
-              selectedregion = null;
-              selectedGovernorate = governorate;
-            });
-          },
-        ),
-        // gov Dropdown Ends here
-        // Region Dropdown
-        DropdownButton<String>(
-          dropdownColor: Colors.teal,
-          hint: Text('Region'),
-          value: selectedregion,
-          isExpanded: true,
-          items: regions.map((String value) {
-            return DropdownMenuItem<String>(
-              value: value,
-              child: Text(value),
-            );
-          }).toList(),
-          onChanged: (regionn) {
-            setState(() {
-              selectedregion = regionn;
-            });
-          },
-        ),
-        // Region Dropdown Ends here
-        DropdownButton<Color>(
-          dropdownColor: Colors.teal,
-          hint: Text('Main Color'),
-          value: selectedColor,
-          isExpanded: true,
-          items: colorsList.map((value) {
-            return DropdownMenuItem<Color>(
-              value: value,
-              child: Row(
-                children: [
-                  Icon(Icons.rectangle, size: 30, color: value),
-                  SizedBox(width: 20),
-                  Text(ucolors[colorsList.indexOf(value)])
-                ],
+        Form(
+          key: formKey2,
+          child: Column(
+            children: [
+              DropdownButtonFormField<String>(
+                dropdownColor: Colors.teal,
+                hint: Text('Category'),
+                value: CategorySelected,
+                isExpanded: true,
+                validator:(value) {
+                  if(value == null){
+                    return ('Category required!');
+                  }
+                } ,
+                items: categories.map((String value) {
+                  return DropdownMenuItem<String>(
+                    value: value,
+                    child: Text(value),
+                  );
+                }).toList(),
+                onChanged: (category) {
+                  if (category == 'Electronics') {
+                    types = electronicsTypes;
+                  } else if (category == 'Cards') {
+                    types = cardsTypes;
+                  } else if (category == 'Clothes & Accessories') {
+                    idNumber.text = 'unhave';
+                    types = clothesAccessoriesTypes;
+                  } else if (category == 'Sports Accessories') {
+                    idNumber.text = 'unhave';
+                    types = sportsAccessoriesTypes;
+                  } else if (category == 'Pets') {
+                    idNumber.text = 'unhave';
+                    types = petsTypes;
+                  } else {
+                    types = [];
+                  }
+                  setState(() {
+                    selectedType = null;
+                    selectedBrand = null;
+                    CategorySelected = category;
+                  });
+                },
               ),
-            );
-          }).toList(),
-          onChanged: (scolor) {
-            setState(() {
-              selectedColor = scolor;
-            });
-          },
+              DropdownButtonFormField<String>(
+                dropdownColor: Colors.teal,
+                hint: Text('Type'),
+                value: selectedType,
+                validator:(value) {
+                  if(value == null){
+                    return ('Type required!');
+                  }
+                } ,
+                isExpanded: true,
+                items: types.map((String value) {
+                  return DropdownMenuItem<String>(
+                    value: value,
+                    child: Text(value),
+                  );
+                }).toList(),
+                onChanged: (type) {
+                  if (type == 'Stop watch' || type == 'Smart Watch') {
+                    brands = stopSmartwatch;
+                  } else if (type == 'charger') {
+                    brands = chargerTypes;
+                  } else if (type == 'Calculator') {
+                    brands = calculatorbrands;
+                  } else if (type == 'Dvd player') {
+                    brands = dvdPlayer;
+                  } else if (type == 'Camera') {
+                    brands = cameraBrand;
+                  } else if (type == 'Earphones') {
+                    brands = earphonesBrands;
+                  } else if (type == 'Smartphone' ||
+                      type == 'iPod' ||
+                      type == 'Tablet') {
+                    brands = smartPhoneTabletBrands;
+                  } else if (type == 'Microphone' || type == 'Radio') {
+                    brands = microphoneRadio;
+                  } else if (type == 'Laptop' || type == 'Mouse') {
+                    brands = laptopMouseBrands;
+                  } else if (type == 'Stop watch' || type == 'Smart Watch') {
+                    brands = stopSmartwatch;
+                  } else if (type == 'Id card' || type == 'Passport') {
+                    brands = idcardBrands;
+                  } else if (type == 'Health Card' || type == 'Transport Card') {
+                    brands = healthTransportCard;
+                  } else if (type == 'Credit card') {
+                    brands = creditCardBrands;
+                  } else if (type == 'Driving License') {
+                    brands = drivingCards;
+                  } else if (clothesAccessoriesTypes.contains(type)) {
+                    brands = clothesAccessoriesBrands;
+                  } else if (sportsAccessoriesTypes.contains(type)) {
+                    brands = sportsAccessoriesBrands;
+                  } else if (type == 'Cats') {
+                    brands = catsBrands;
+                  } else if (type == 'Dogs') {
+                    brands = dogsBrands;
+                  } else if (type == 'Birds') {
+                    brands = birdsBrands;
+                  } else if (type == 'Rabbits') {
+                    brands = rabbits;
+                  } else if (type == 'Horses') {
+                    brands = horses;
+                  } else if (type == 'Turtles') {
+                    brands = turtles;
+                  } else if (type == 'Fish') {
+                    brands = fish;
+                  } else if (type == 'Pigs') {
+                    brands = pigs;
+                  } else if (type == 'Rats and Mice') {
+                    brands = ratsAndMice;
+                  } else {
+                    brands = [];
+                  }
+                  setState(() {
+                    selectedBrand = null;
+                    selectedType = type;
+                  });
+                },
+              ),
+              DropdownButtonFormField<String>(
+                dropdownColor: Colors.teal,
+                hint: Text('Brand/Id'),
+                value: selectedBrand,
+                validator:(value) {
+                  if(value == null){
+                    return ('brand required!');
+                  }
+                } ,
+                isExpanded: true,
+                items: brands.map((String value) {
+                  return DropdownMenuItem<String>(
+                    value: value,
+                    child: Text(value),
+                  );
+                }).toList(),
+                onChanged: (brand) {
+                  setState(() {
+                    selectedBrand = brand;
+                  });
+                },
+              ),
+              Visibility(
+                visible:
+                CategorySelected == 'Cards' || CategorySelected == 'Electronics'
+                    ? true
+                    : false,
+                child: TextFormField(
+                  autofocus: false,
+                  controller: idNumber,
+                  keyboardType: TextInputType.name,
+                  validator: (value) {
+                    if (value == null) {
+                      return (' serial Number required!');
+                    }
+                    return null;
+                  },
+                  onSaved: (value) {
+                    idNumber.text = value!;
+                  },
+                  textInputAction: TextInputAction.next,
+                  decoration: InputDecoration(
+                    prefixIcon: Icon(Icons.tag),
+                    hintText: CategorySelected == 'Cards'
+                        ? 'Enter Your Id Number'
+                        : 'Enter serial Number',
+                  ),
+                ),
+              ),
+              // gov Dropdown
+              DropdownButtonFormField<String>(
+                dropdownColor: Colors.teal,
+                hint: Text('Governorate'),
+                value: selectedGovernorate,
+                validator:(value) {
+                  if(value == null){
+                    return ('Governorate required!');
+                  }
+                },
+                isExpanded: true,
+                items: gov.map((String value) {
+                  return DropdownMenuItem<String>(
+                    value: value,
+                    child: Text(value),
+                  );
+                }).toList(),
+                onChanged: (governorate) {
+                  if (governorate == 'Cairo') {
+                    regions = cairo;
+                  } else if (governorate == 'Giza') {
+                    regions = giza;
+                  } else if (governorate == 'Alexandria') {
+                    regions = alexandria;
+                  } else if (governorate == 'Dakahlia') {
+                    regions = dakahlia;
+                  } else if (governorate == 'Red Sea') {
+                    regions = redSea;
+                  } else if (governorate == 'Beheira') {
+                    regions = beheira;
+                  } else if (governorate == 'Fayoum') {
+                    regions = fayoum;
+                  } else if (governorate == 'Gharbiya') {
+                    regions = gharbiya;
+                  } else if (governorate == 'Ismailia') {
+                    regions = ismailia;
+                  } else if (governorate == 'Menofia') {
+                    regions = menofia;
+                  } else if (governorate == 'Minya') {
+                    regions = minya;
+                  } else if (governorate == 'Qaliubiya') {
+                    regions = qaliubiya;
+                  } else if (governorate == 'New Valley') {
+                    regions = newValley;
+                  } else if (governorate == 'Suez') {
+                    regions = suez;
+                  } else if (governorate == 'Aswan') {
+                    regions = aswan;
+                  } else if (governorate == 'Assiut') {
+                    regions = assiut;
+                  } else if (governorate == 'Beni Suef') {
+                    regions = beniSuef;
+                  } else if (governorate == 'Port Said') {
+                    regions = portSaid;
+                  } else if (governorate == 'Damietta') {
+                    regions = damietta;
+                  } else if (governorate == 'Sharkia') {
+                    regions = sharkia;
+                  } else if (governorate == 'South Sinai') {
+                    regions = southSinai;
+                  } else if (governorate == 'Kafr Al sheikh') {
+                    regions = kafrAlsheikh;
+                  } else if (governorate == 'Matrouh') {
+                    regions = matrouh;
+                  } else if (governorate == 'Luxor') {
+                    regions = luxor;
+                  } else if (governorate == 'Qena') {
+                    regions = qena;
+                  } else if (governorate == 'North Sinai') {
+                    regions = northSinai;
+                  } else if (governorate == 'Sohag') {
+                    regions = sohag;
+                  } else {
+                    regions = [];
+                  }
+                  setState(() {
+                    selectedregion = null;
+                    selectedGovernorate = governorate;
+                  });
+                },
+              ),
+              // gov Dropdown Ends here
+              // Region Dropdown
+              DropdownButtonFormField<String>(
+                dropdownColor: Colors.teal,
+                hint: Text('Region'),
+                value: selectedregion,
+                validator:(value) {
+                  if(value == null){
+                    return ('City required!');
+                  }
+                },
+                isExpanded: true,
+                items: regions.map((String value) {
+                  return DropdownMenuItem<String>(
+                    value: value,
+                    child: Text(value),
+                  );
+                }).toList(),
+                onChanged: (regionn) {
+                  setState(() {
+                    selectedregion = regionn;
+                  });
+                },
+              ),
+              // Region Dropdown Ends here
+              DropdownButtonFormField<Color>(
+                dropdownColor: Colors.teal,
+                hint: Text('Main Color'),
+                value: selectedColor,
+                validator:(value) {
+                  if(value == null){
+                    return ('Color required!');
+                  }
+                },
+                isExpanded: true,
+                items: colorsList.map((value) {
+                  return DropdownMenuItem<Color>(
+                    value: value,
+                    child: Row(
+                      children: [
+                        Icon(Icons.rectangle, size: 30, color: value),
+                        SizedBox(width: 20),
+                        Text(ucolors[colorsList.indexOf(value)])
+                      ],
+                    ),
+                  );
+                }).toList(),
+                onChanged: (scolor) {
+                  setState(() {
+                    selectedColor = scolor;
+                  });
+                },
+              ),
+            ],
+          ),
         ),
         Container(
           alignment: Alignment.centerRight,
@@ -1322,13 +1360,11 @@ class _reportFormState extends State<reportForm> {
         SizedBox(height: 30),
         Container(
           width: MediaQuery.of(context).size.width,
-          child: Row(
+          child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Material(
-                elevation: 5,
-                borderRadius: BorderRadius.circular(30),
-                color: secondColor,
+              Container(
+                decoration: BoxDecoration( borderRadius: BorderRadius.circular(30),color: secondColor,),
                 child: MaterialButton(
                     padding: EdgeInsets.fromLTRB(20, 15, 20, 15),
                     onPressed: () {
@@ -1345,15 +1381,14 @@ class _reportFormState extends State<reportForm> {
                     },
                     child: Text(
                       "Report As Lost",
+                      overflow: TextOverflow.clip,
                       textAlign: TextAlign.center,
                       style: TextStyle(fontSize: 18, color: Colors.white),
                     )),
               ),
-              SizedBox(width: 30),
-              Material(
-                elevation: 5,
-                borderRadius: BorderRadius.circular(30),
-                color: secondColor,
+              SizedBox(height: 10),
+              Container(
+                decoration: BoxDecoration( borderRadius: BorderRadius.circular(30),color: secondColor,),
                 child: MaterialButton(
                     padding: EdgeInsets.fromLTRB(20, 15, 20, 15),
                     onPressed: () {
@@ -1370,6 +1405,7 @@ class _reportFormState extends State<reportForm> {
                     },
                     child: Text(
                       "Report As Found",
+                      overflow: TextOverflow.clip,
                       textAlign: TextAlign.center,
                       style: TextStyle(fontSize: 18, color: Colors.white),
                     )),
@@ -1401,19 +1437,7 @@ class _reportFormState extends State<reportForm> {
   }
   matchingAlgorithem match = matchingAlgorithem();
   postDetailsToFirestoreLost() async {
-    if (selectedDate == null ||
-        selectedType == null ||
-        CategorySelected == null ||
-        selectedregion == null ||
-        selectedGovernorate == null ||
-        selectedColor == null ||
-        selectedBrand == null) {
-      Fluttertoast.showToast(
-          msg: "please fill fields required ",
-          webBgColor: "linear-gradient(to right, #FF0000FF, #FF0000FF)",
-          timeInSecForIosWeb: 5);
-      return null;
-    } else {
+    if(formKey2.currentState!.validate()){
       FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
       User? user = _auth.currentUser;
 
@@ -1452,21 +1476,8 @@ class _reportFormState extends State<reportForm> {
           (route) => false);
     }
   }
-
   postDetailsToFirestoreFound() async {
-    if (selectedDate == null ||
-        selectedType == null ||
-        CategorySelected == null ||
-        selectedregion == null ||
-        selectedGovernorate == null ||
-        selectedColor == null ||
-        selectedBrand == null) {
-      Fluttertoast.showToast(
-          msg: "please fill fields required ",
-          webBgColor: "linear-gradient(to right, #FF0000FF, #FF0000FF)",
-          timeInSecForIosWeb: 5);
-      return null;
-    } else {
+    if(formKey2.currentState!.validate()){
       FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
       User? user = _auth.currentUser;
 

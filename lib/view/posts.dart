@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/widgets/postForm.dart';
 
 import 'home.dart';
 import 'navBar.dart';
@@ -30,6 +31,11 @@ class posts extends StatelessWidget {
           )
         ],
         centerTitle: true,
+      ),
+      body:Text('Hello'),
+      floatingActionButton: FloatingActionButton(
+        onPressed: ()=>showFormDialog(context),
+        child: Icon(Icons.add),
       ),
     );
   }

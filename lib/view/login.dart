@@ -172,7 +172,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   Fluttertoast.showToast(
                       msg: "Login Successful",
                       webBgColor: "linear-gradient(to right, #2e8b57, #2e8b57)",
-                      timeInSecForIosWeb: 5),
+                      timeInSecForIosWeb: 2),
                   Navigator.of(context).pushReplacement(
                       MaterialPageRoute(builder: (context) => HomeScreen())),
                 });

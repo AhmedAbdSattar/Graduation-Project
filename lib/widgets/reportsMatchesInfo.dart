@@ -81,11 +81,7 @@ var widget ;
                      child: MaterialButton(
                          padding: EdgeInsets.fromLTRB(20, 15, 20, 5),
                          onPressed: () {
-                           Navigator.pushAndRemoveUntil(
-                               (context),
-                               MaterialPageRoute(builder: (context) =>
-                                   matchedReports()),
-                                   (route) => false);
+                           Navigator.of(context).pop();
                          },
                          child: Text(
                            "Cancel",
