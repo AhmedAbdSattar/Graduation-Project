@@ -62,16 +62,15 @@ var widget ;
                .size
                .height,
            child: Column(
-             mainAxisAlignment: MainAxisAlignment.start,
-             crossAxisAlignment: CrossAxisAlignment.center,
+             //mainAxisAlignment: MainAxisAlignment.center,
+             //crossAxisAlignment: CrossAxisAlignment.center,
              children: [
                Text('All user information for similar reports',
                  style: TextStyle(fontSize: 15, color: Colors.black87),),
-               SizedBox(height: 50),
+               SizedBox(height: 20),
                 lists(widgets, context),
                SizedBox(height: 20),
                Row(
-                 crossAxisAlignment: CrossAxisAlignment.end,
                  mainAxisAlignment: MainAxisAlignment.center,
                  children: [
                    Material(
@@ -105,11 +104,13 @@ var widget ;
        //  height:MediaQuery.of(context).size.height*.6,
          padding: EdgeInsets.fromLTRB(0, 5, 0, 5),
          child: Column(
+           //crossAxisAlignment: CrossAxisAlignment.center,
+           //mainAxisAlignment: MainAxisAlignment.center,
            children: [
              Text(FirstName , style:TextStyle( fontSize: 20, color: Colors.teal), ),
              SizedBox(height: 10),
 
-                 Text('Email: $Email' , style:TextStyle( fontSize: 15, color: Colors.black), ),
+                 Text('$Email' , style:TextStyle( fontSize: 15, color: Colors.black), ),
                  SizedBox(height: 3),
                  Text('Phone: $phone' , style:TextStyle( fontSize: 15, color: Colors.black), ),
                   SizedBox(height: 3),

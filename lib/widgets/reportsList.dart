@@ -81,7 +81,7 @@ var view ;
                   width: 80,
                   height: 80,
                   child: Image.asset(
-                      reportKind == 'lost' ? 'lost.png' : 'found.png'),
+                      reportKind == 'lost' ? 'assets/lost.png' : 'assets/found.png'),
                 ),
                 SizedBox(
                   width: 10,
@@ -89,7 +89,7 @@ var view ;
                 Row(
                   children: <Widget>[
                     Container(
-                      width: size.width/2,
+                      width: size.width/2.1,
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -135,7 +135,7 @@ var view ;
                                   BoxShadow(color: Colors.black.withAlpha(100), blurRadius: 1.0),
                                 ]),
                             height: 20,
-                            width: size.width / 2,
+                            width: size.width / 2.1,
                           )
                         ],
                       ),

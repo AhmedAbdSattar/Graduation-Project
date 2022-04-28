@@ -35,7 +35,7 @@ class _myReportState extends State<myReport> {
             height: 100,
             width: 150,
             child: Image.asset(
-              "logo2.png",
+              "assets/logo2.png",
               fit: BoxFit.contain,
             )),
         actions: <Widget>[

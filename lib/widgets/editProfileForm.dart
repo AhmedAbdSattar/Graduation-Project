@@ -169,7 +169,7 @@ class editProfileState extends State<editProfileForm> {
                     SizedBox(
                         height: 280,
                         child: Image.asset(
-                          "logo.png",
+                          "assets/logo.png",
                           fit: BoxFit.contain,
                         )),
                     SizedBox(height: 45),

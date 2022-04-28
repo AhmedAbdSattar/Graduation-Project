@@ -1,13 +1,24 @@
 
 
+
+
 import 'dart:io';
 
+
+
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter_application_1/model/posts.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:path/path.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:permission_handler/permission_handler.dart';
+
+import '../model/users.dart';
 
 List<String> gov = [
   'Cairo',
@@ -485,6 +496,7 @@ List<String> regions = [];
 var selectedGovernorate;
 var selectedregion ;
 File? _image;
+String? _url;
 showFormDialog(BuildContext context)  {
   return  showDialog(
       context: context,
@@ -610,37 +622,11 @@ showFormDialog(BuildContext context)  {
                       ),
                       SizedBox( height: 30),
                       TextFormField(
-                          autofocus: false,
-                          controller: title,
-                          keyboardType: TextInputType.name,
-                          maxLength: 100,
-                          validator: (value) {
-                            RegExp regex = new RegExp(r'^.{3,}$');
-                            if (value!.isEmpty) {
-                              return (" Title cannot be Empty");
-                            }
-                            if (!regex.hasMatch(value)) {
-                              return ("Enter Valid title(Min. 3 Character)");
-                            }
-                            return null;
-                          },
-                          onSaved: (value) {
-                            title.text = value!;
-                          },
-                          textInputAction: TextInputAction.next,
-                          decoration: InputDecoration(
-                            contentPadding: EdgeInsets.fromLTRB(20, 15, 20, 15),
-                            hintText: "Post title",
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                          )),
-                      TextFormField(
                         autofocus: false,
                         controller: description,
                         keyboardType: TextInputType.name,
-                        maxLength: 450,
-                        maxLines: 5,
+                        maxLength: 200,
+                        maxLines: 4,
                         validator: (value) {
                           RegExp regex = new RegExp(r'^.{3,}$');
                           if (value!.isEmpty) {
@@ -667,30 +653,33 @@ showFormDialog(BuildContext context)  {
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: <Widget>[
                           Text('Pick image:',style: TextStyle(fontSize: 15,color: Colors.black54),),
-                          SizedBox(width: 10,),
-                          MaterialButton(
-                            elevation: 3,
-                            hoverColor: Colors.black54,
+                          SizedBox(width:5,),
 
+                          IconButton(
+                            icon:Icon(Icons.image),
                             onPressed: ()  async{
                                 PickedFile? image = await ImagePicker.platform.pickImage(source: ImageSource.gallery);
                                 setState((){
-                                  _image = File(image!.path);
+                                    _image = File(image!.path);
                                 });
-                                  print(_image!.toString());
-
                                 },
-
-                    child: Row(children: [Icon(Icons.add_a_photo),Text('Pick image or video',style: TextStyle(fontSize: 10 ,color: Colors.white),) ],),
                           ),
+                          IconButton(
+                            onPressed: ()  async{
+                              XFile? image = await ImagePicker.platform.getImage(source: ImageSource.camera);
+                              setState((){
+                                _image = File(image!.path);
+                              });
+                            },
+                            icon:Icon(Icons.camera_alt) ),
                         ],
                       ),
                       SizedBox(height: 5,),
                       _image != null?
                       Container(
-                          child: Image.network(_image!.path),
+                          child: Image.file(_image!),
                       ):
-                          Container(child:  Image.asset('logo.png'),)
+                          Container(child:  Image.asset('assets/image.png'),)
                     ],
                   ),
                 ),
@@ -704,9 +693,17 @@ showFormDialog(BuildContext context)  {
                     child: MaterialButton(
                       padding: EdgeInsets.fromLTRB(20, 15, 20, 15),
                       minWidth: MediaQuery.of(context).size.width,
-                      onPressed: () {
-                         postData(context,selectedregion,selectedGovernorate,
-                           title.text, description.text);
+                      onPressed: () async {
+                         await postData(context,selectedregion,selectedGovernorate,
+                            description.text ,_image);
+                         setState((){
+                                title.clear();
+                                description.clear();
+                                selectedGovernorate =null;
+                                selectedregion =null;
+                                _image =null;
+                         });
+
                       },
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -739,13 +736,51 @@ showFormDialog(BuildContext context)  {
 
 }
 
-postData(BuildContext context,var locationCity,var locationTown, String title, String description) {
+postData(BuildContext context,var locationCity,var locationTown, String description, File? image) async {
   if (_formKey.currentState!.validate()) {
-    print('Location is $locationCity');
-    print('Location is $locationTown');
-    print('title is $title');
-    print('desc is $description');
-    Navigator.of(context).pop();
-  }
+if (image != null){
+  print('the image link is :$image');
+  String fileName = basename(image.path);
+  Reference firebaseStorageRef =
+  FirebaseStorage.instance.ref().child('images/$fileName');
+  await firebaseStorageRef.putFile(image);
+  _url =await firebaseStorageRef.getDownloadURL();
+
+  FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
+  postModel post = postModel();
+  User? user = FirebaseAuth.instance.currentUser;
+  DocumentSnapshot<Map<String, dynamic>> data =await firebaseFirestore
+      .collection("users")
+      .doc(user!.uid).get();
+  //set values
+  post.postOwner = data.get('firstName');
+  post.postDescription = description;
+  post.locationTown =locationTown;
+  post.locationCity = locationCity;
+  post.location=locationTown+' '+locationCity;
+  post.postTime =DateTime.now();
+  post.imageUrl=_url;
+  post.comments =[];
+  post.likes;
+
+  final collRef = await firebaseFirestore.collection('posts');
+  var docReference = collRef.doc();
+  post.postId = docReference.id;
+  docReference.set(post.toMap());
+  Fluttertoast.showToast(
+      msg: "post added  successfully :) ",
+      webBgColor: "linear-gradient(to right, #2e8b57, #2e8b57)",
+      timeInSecForIosWeb: 5);
+  Navigator.of(context).pop();
+
+}else{
+  Fluttertoast.showToast(
+      msg: "please pick image ",
+      timeInSecForIosWeb: 5);
+
 }
+
+  }
+  }
+
 
