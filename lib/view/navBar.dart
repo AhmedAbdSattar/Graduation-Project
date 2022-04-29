@@ -133,43 +133,36 @@ class _navBarState extends State<navBar> {
       InkWell(
         onTap: onClicked,
         child: Container(
-          padding: EdgeInsets.symmetric(vertical: 40),
+          color: Colors.teal,
+          padding: EdgeInsets.symmetric(vertical: 30),
           child: Container(
-            padding: EdgeInsets.fromLTRB(10.0, 0.0, 0.0, 0.0),
+            padding: EdgeInsets.all(5.00),
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Text(
                   name,
-                  style: TextStyle(fontSize: 30, color: Colors.white),
+                  style: TextStyle(fontSize: 25,fontWeight: FontWeight.bold, color: Colors.white),
                 ),
                 const SizedBox(height: 1),
-                Row(
-                  children: [
-                    Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(50),
-                        color: Colors.teal,
-                      ),
-                      padding: EdgeInsets.all(5.0),
-                      child: Text(
-                        email,
-                        style: TextStyle(fontSize: 15, color: Colors.white),
-                      ),
-                    ),
-                    const SizedBox(width: 5),
-                    Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(50),
-                        color: Colors.teal,
-                      ),
-                      padding: EdgeInsets.all(5.0),
-                      child: Text(
-                        'Tab to edit ',
-                        style: TextStyle(fontSize: 15, color: Colors.white),
-                      ),
-                    ),
-                  ],
+                Container(
+                  padding: EdgeInsets.all(5.0),
+                  child: Text(
+                    email,
+                    style: TextStyle(fontSize: 15, color: Colors.white),
+                  ),
+                ),
+                const SizedBox(width: 5),
+                Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(50),
+                    color: Colors.black12,
+                  ),
+                  padding: EdgeInsets.all(5.0),
+                  child: Text(
+                    'Tab to edit',
+                    style: TextStyle(fontSize: 15, color: Colors.white),
+                  ),
                 ),
               ],
             ),

@@ -754,6 +754,7 @@ if (image != null){
       .doc(user!.uid).get();
   //set values
   post.postOwner = data.get('firstName');
+  post.postOwnerId=user.uid;
   post.postDescription = description;
   post.locationTown =locationTown;
   post.locationCity = locationCity;

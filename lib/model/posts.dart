@@ -1,6 +1,7 @@
 class postModel {
   String? postId;
   String? postOwner;
+  String? postOwnerId;
   String? postDescription;
   String? locationCity;
   String? locationTown;
@@ -10,12 +11,13 @@ class postModel {
   DateTime postTime =DateTime.now();
   List<String> likes = [];
 
-  postModel({this.postId, this.postOwner, this.postDescription,this.locationTown,this.locationCity,this.location,this.imageUrl});
+  postModel({this.postId,this.postOwnerId, this.postOwner, this.postDescription,this.locationTown,this.locationCity,this.location,this.imageUrl});
 
   // receiving data from server
   factory postModel.fromMap(map) {
     return postModel(
       postId: map['postId'],
+      postOwnerId: map['postOwnerId'],
       postOwner: map['postOwner'],
       postDescription: map['postDescription'],
       locationTown: map['locationTown'],
@@ -29,6 +31,7 @@ class postModel {
   Map<String, dynamic> toMap() {
     return {
       'postId': postId,
+      'postOwnerId': postOwnerId,
       'postOwner': postOwner,
       'postDescription': postDescription,
       'locationTown': locationTown,

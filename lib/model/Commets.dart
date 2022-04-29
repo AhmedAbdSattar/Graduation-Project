@@ -2,10 +2,11 @@ class commentModel {
   String? commentId;
   String? postId;
   String? commentOwner;
+  String? commentOwnerId;
   String? commentContent;
   DateTime commentTime =DateTime.now();
 
-  commentModel({this.commentId, this.postId, this.commentOwner, this.commentContent});
+  commentModel({this.commentId, this.postId, this.commentOwner, this.commentContent,this.commentOwnerId});
 
   // receiving data from server
   factory commentModel.fromMap(map) {
@@ -14,6 +15,7 @@ class commentModel {
       postId: map['postId'],
       commentOwner: map['commentOwner'],
       commentContent: map['commentContent'],
+      commentOwnerId: map['commentOwnerId'],
     );
   }
 
@@ -25,6 +27,7 @@ class commentModel {
       'commentOwner': commentOwner,
       'commentContent': commentContent,
       'commentTime': commentTime,
+      'commentOwnerId':commentOwnerId,
     };
   }
 }
