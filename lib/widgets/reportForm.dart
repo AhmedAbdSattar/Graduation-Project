@@ -6,7 +6,6 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_application_1/controller/matching.dart';
 import 'package:flutter_application_1/model/lostReports.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:hexcolor/hexcolor.dart';
 import 'package:scroll_date_picker/scroll_date_picker.dart';
 
 import '../model/foundReports.dart';
@@ -487,7 +486,7 @@ List<String> sohag = [
   'Tahta',
   'Tima',
 ];
-Color secondColor = HexColor("#2e8b57");
+Color secondColor = Colors.teal;
 
 List<String> regions = [];
 List<String> types = [];

@@ -2,7 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:hexcolor/hexcolor.dart';
 
 import '../model/users.dart';
 import 'home.dart';
@@ -33,7 +32,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   @override
   Widget build(BuildContext context) {
     //second color
-    Color secondColor = HexColor("#2e8b57");
+    Color secondColor = Colors.teal;
     //first name field
     final firstNameField = TextFormField(
         autofocus: false,

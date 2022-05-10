@@ -1,7 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:hexcolor/hexcolor.dart';
 
 import 'home.dart';
 import 'register.dart';
@@ -26,7 +25,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   // string for displaying the error Message
   String? errorMessage;
-  Color secondColor = HexColor("#2e8b57");
+  Color secondColor = Colors.teal;
 
   @override
   Widget build(BuildContext context) {

@@ -6,7 +6,6 @@ import 'package:flutter_application_1/view/myReport.dart';
 import 'package:flutter_application_1/view/posts.dart';
 import 'package:flutter_application_1/view/profile.dart';
 import 'package:flutter_application_1/view/safePlacesSearch.dart';
-import 'package:hexcolor/hexcolor.dart';
 
 import '../model/users.dart';
 import 'login.dart';
@@ -21,7 +20,7 @@ class navBar extends StatefulWidget {
 
 class _navBarState extends State<navBar> {
   @override
-  Color secondColor = HexColor("#2e8b57");
+  Color secondColor = Colors.teal;
   User? user = FirebaseAuth.instance.currentUser;
   UserModel loggedInUser = UserModel();
 
