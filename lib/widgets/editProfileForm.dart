@@ -2,7 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:hexcolor/hexcolor.dart';
 
 import '../model/users.dart';
 import '../view/home.dart';
@@ -45,7 +44,7 @@ class editProfileState extends State<editProfileForm> {
   @override
   Widget build(BuildContext context) {
     //second color
-    Color secondColor = HexColor("#2e8b57");
+    Color secondColor = Colors.teal;
     //first name field
     firstNameEditingController.text ='${loggedInUser.firstName}';
     final firstNameField = TextFormField(

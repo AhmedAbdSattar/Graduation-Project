@@ -31,13 +31,11 @@ dependencies:
   cupertino_icons: ^1.0.2
   firebase_auth: ^3.3.11
   firebase_core: ^1.13.1
-  hexcolor: ^2.0.6
   scroll_date_picker: ^3.4.0
   async: ^2.8.2
   rxdart: ^0.27.3
   firebase_storage: ^10.2.12
   image_picker: ^0.8.5
-  permission_handler: ^9.2.0
   intl: ^0.17.0
   flutter:
     sdk: flutter
@@ -47,6 +45,11 @@ dev_dependencies:
   flutter_lints: ^1.0.0
   flutter_test:
     sdk: flutter
+  flutter_launcher_icons: "^0.8.0"
+flutter_icons:
+  image_path: "assets/icon.png"
+  android: true
+
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
