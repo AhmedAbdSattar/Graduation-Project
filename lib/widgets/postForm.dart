@@ -775,9 +775,34 @@ if (image != null){
   Navigator.of(context).pop();
 
 }else{
+
+  FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
+  postModel post = postModel();
+  User? user = FirebaseAuth.instance.currentUser;
+  DocumentSnapshot<Map<String, dynamic>> data =await firebaseFirestore
+      .collection("users")
+      .doc(user!.uid).get();
+  //set values
+  post.postOwner = data.get('firstName');
+  post.postOwnerId=user.uid;
+  post.postDescription = description;
+  post.locationTown =locationTown;
+  post.locationCity = locationCity;
+  post.location=locationTown+' '+locationCity;
+  post.postTime =DateTime.now();
+  post.imageUrl='notfound';
+  post.comments =[];
+  post.likes;
+
+  final collRef = await firebaseFirestore.collection('posts');
+  var docReference = collRef.doc();
+  post.postId = docReference.id;
+  docReference.set(post.toMap());
   Fluttertoast.showToast(
-      msg: "please pick image ",
+      msg: "post added  successfully :) ",
+      webBgColor: "linear-gradient(to right, #2e8b57, #2e8b57)",
       timeInSecForIosWeb: 5);
+  Navigator.of(context).pop();
 
 }
 

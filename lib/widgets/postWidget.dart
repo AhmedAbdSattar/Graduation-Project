@@ -35,7 +35,7 @@ import 'package:flutter_application_1/controller/deletePost.dart';
                   Text(postLocation+'  '+'$time',style: TextStyle(fontSize: 12,fontWeight: FontWeight.normal,color:Colors.black54),overflow: TextOverflow.clip,),
                   //Image
                   SizedBox(height: 5,),
-                  Center(child: Image.network(PostImage,fit:BoxFit.cover,)),
+                  Visibility( visible:PostImage=='notfound'?false:true,child: Center(child: Image.network(PostImage,fit:BoxFit.cover,))),
                   //React
                   Center(
                     child: Row(
@@ -56,8 +56,8 @@ import 'package:flutter_application_1/controller/deletePost.dart';
                                 });
                               }
                             },
-                            icon: likesList.contains(user!.uid)?Icon(Icons.emoji_emotions_rounded,color:Colors.orange,size:30,):Icon(Icons.emoji_emotions_outlined,color:Colors.black,size: 30,)),
-                        Text('${likesList.length}  interactors',style: TextStyle(fontSize: 12,color: Colors.black87,fontWeight:FontWeight.normal ),), SizedBox(width: 5,),
+                            icon: likesList.contains(user!.uid)?Icon(Icons.warning ,color:Colors.red,size:30,):Icon(Icons.warning_amber_outlined,color:Colors.black,size: 30,)),
+                        Text('${likesList.length}  warning',style: TextStyle(fontSize: 12,color: Colors.black87,fontWeight:FontWeight.normal ),), SizedBox(width: 5,),
                         //Comments Icon
                         IconButton(onPressed: ()=>commentsWidget(context, postID), icon: Icon(Icons.comment,color: Colors.black,))
                       ],

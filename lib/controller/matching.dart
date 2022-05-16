@@ -14,7 +14,7 @@ class matchingAlgorithem {
         .get()
         .then((QuerySnapshot querySnapshot) {
       querySnapshot.docs.forEach((doc) {
-        if (doc["status"] == false &&
+        if (
             doc["reportId"] != report.reportId &&
             doc["userid"] != user!.uid &&
             doc["itemtype"] == report.itemtype &&
@@ -46,7 +46,7 @@ class matchingAlgorithem {
         .get()
         .then((QuerySnapshot querySnapshot) {
       querySnapshot.docs.forEach((doc) {
-        if (doc["status"] == false &&
+        if (
             doc["reportId"] != report.reportId &&
             doc["userid"] != user!.uid &&
             doc["itemtype"] == report.itemtype &&
