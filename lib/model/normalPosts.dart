@@ -1,4 +1,4 @@
-class postModel {
+class normalpostModel {
   String? postId;
   String? postOwner;
   String? postOwnerId;
@@ -7,17 +7,16 @@ class postModel {
   String? locationTown;
   String? location;
   String? imageUrl;
-  String? kind='acc';
-  String? CrimeType = 'other';
+  String? kind = 'nor';
   List <String> comments=[];
   DateTime postTime =DateTime.now();
   List<String> likes = [];
 
-  postModel({this.postId,this.postOwnerId, this.postOwner, this.postDescription,this.locationTown,this.locationCity,this.location,this.imageUrl,this.CrimeType,this.kind});
+  normalpostModel({this.postId,this.postOwnerId, this.postOwner, this.postDescription,this.locationTown,this.locationCity,this.location,this.imageUrl,this.kind});
 
   // receiving data from server
-  factory postModel.fromMap(map) {
-    return postModel(
+  factory normalpostModel.fromMap(map) {
+    return normalpostModel(
       postId: map['postId'],
       postOwnerId: map['postOwnerId'],
       postOwner: map['postOwner'],
@@ -26,7 +25,6 @@ class postModel {
       locationCity: map['locationCity'],
       location:map['location'],
       imageUrl: map['imageUrl'],
-      CrimeType: map['CrimeType'],
       kind: map['kind'],
     );
   }
@@ -45,8 +43,7 @@ class postModel {
       'comments': comments,
       'postTime': postTime,
       'likes':likes,
-      'CrimeType':CrimeType,
-      'kind':'acc',
+      'kind':'nor'
     };
   }
 }

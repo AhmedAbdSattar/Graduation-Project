@@ -3,16 +3,15 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/view/postsNavBar.dart';
 import 'package:flutter_application_1/widgets/postForm.dart';
 
 import '../widgets/postWidget.dart';
 import 'home.dart';
 import 'navBar.dart';
 
-class posts extends StatefulWidget {
+class normalposts extends StatefulWidget {
   @override
-  State<posts> createState() => _postsState();
+  State<normalposts> createState() => _normalpostsState();
 }
 List<String> govern = [
   'all',
@@ -44,7 +43,7 @@ List<String> govern = [
   'North Sinai',
   'Sohag'
 ];
-class _postsState extends State<posts> {
+class _normalpostsState extends State<normalposts> {
   String selectedGov='all';
   String filter ='postTime';
   @override
@@ -75,12 +74,11 @@ class _postsState extends State<posts> {
           });
         },
         currentIndex: filter == 'postTime' ? 0 : 1,
-        selectedItemColor: Colors.red,
+        selectedItemColor: Colors.teal,
         unselectedItemColor: Colors.black38,
       ),
-      drawer: postsNavBar(),
+      drawer: navBar(),
       appBar: AppBar(
-        backgroundColor: Colors.red,
         title: SizedBox(
             height: 100,
             width: 150,
@@ -153,17 +151,16 @@ class _postsState extends State<posts> {
       ),
       floatingActionButtonLocation:FloatingActionButtonLocation.centerDocked,
       floatingActionButton: FloatingActionButton(
-        backgroundColor: Colors.red,
-        onPressed: ()=>showFormDialog(context,'acc'),
+        onPressed: ()=>showFormDialog(context,'nor'),
         child: Icon(Icons.post_add),
       ),
     );
   }
 }
 Widget getData(BuildContext context,String locationFilter,String filter) {
-print(filter);
+  print(filter);
 
-  var stream = FirebaseFirestore.instance.collection('posts').orderBy(filter,descending:true).snapshots();
+  var stream = FirebaseFirestore.instance.collection('normalPosts').orderBy(filter,descending:true).snapshots();
 
   return StreamBuilder<QuerySnapshot>(
     stream: stream,
@@ -186,7 +183,7 @@ List <Widget> getExpenseItems(AsyncSnapshot<QuerySnapshot> snapshot, BuildContex
   }
   snapshot.data?.docs.forEach((element) {
     if(filtered?element['locationTown']==locationFilter:element['locationTown'] !=null){
-      posts.add(showPost(context,element['postOwnerId'] ,element['postId'], element['postOwner'], element['postDescription'], element['imageUrl'], element['location'],element['postTime'], element['likes'], element['comments'],element['kind'],crimeType:element['CrimeType']));
+      posts.add(showPost(context,element['postOwnerId'] ,element['postId'], element['postOwner'], element['postDescription'], element['imageUrl'], element['location'],element['postTime'], element['likes'], element['comments'],element['kind']));
     }
   });
   if(posts.isEmpty){

@@ -12,16 +12,16 @@ import '../model/users.dart';
 import 'login.dart';
 import 'matchesReports.dart';
 
-class navBar extends StatefulWidget {
-  const navBar({Key? key}) : super(key: key);
+class postsNavBar extends StatefulWidget {
+  const postsNavBar({Key? key}) : super(key: key);
 
   @override
-  _navBarState createState() => _navBarState();
+  _postsNavBarState createState() => _postsNavBarState();
 }
 
-class _navBarState extends State<navBar> {
+class _postsNavBarState extends State<postsNavBar> {
   @override
-  Color secondColor = Colors.teal;
+  Color secondColor = Colors.red;
   User? user = FirebaseAuth.instance.currentUser;
   UserModel loggedInUser = UserModel();
 
@@ -43,7 +43,7 @@ class _navBarState extends State<navBar> {
     final padding = EdgeInsets.symmetric(horizontal: 10);
     return Drawer(
       child: Material(
-        color: Colors.teal,
+        color: Colors.red,
         child: ListView(
           children: <Widget>[
             buildHeader(
@@ -51,8 +51,8 @@ class _navBarState extends State<navBar> {
               email: '${loggedInUser.email}',
               onClicked: () =>
                   Navigator.of(context).pushReplacement(MaterialPageRoute(
-                builder: (context) => profile(),
-              )),
+                    builder: (context) => profile(),
+                  )),
             ),
             const SizedBox(height: 1),
             Divider(color: Colors.white70),
@@ -133,7 +133,7 @@ class _navBarState extends State<navBar> {
       InkWell(
         onTap: onClicked,
         child: Container(
-          color: Colors.teal,
+          color: Colors.red,
           padding: EdgeInsets.symmetric(vertical: 30),
           child: Container(
             padding: EdgeInsets.all(5.00),

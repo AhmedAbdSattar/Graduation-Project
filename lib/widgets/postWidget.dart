@@ -7,14 +7,17 @@ import 'package:flutter_application_1/model/Commets.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter_application_1/controller/deletePost.dart';
 
- Widget showPost(BuildContext context,String postOwnerId,String postID,String postOwner,String PostDescription,String PostImage,String postLocation,Timestamp postDate,List<dynamic> likesList,List commentsList){
+ Widget showPost(BuildContext context,String postOwnerId,String postID,String postOwner,String PostDescription,String PostImage,String postLocation,Timestamp postDate,List<dynamic> likesList,List commentsList,String kind, {crimeType}){
   DateTime Date = postDate.toDate();
   DateFormat dateFormat = DateFormat("yyyy-MM-dd HH:mm");
   String time =dateFormat.format(Date);
   print(postOwnerId);
   User? user = FirebaseAuth.instance.currentUser;
   bool? isliked;
-
+  var collection ='posts';
+  if (kind == 'nor'){
+    collection = 'normalPosts';
+  }
   return Stack(
     children: [
       StatefulBuilder(
@@ -30,7 +33,7 @@ import 'package:flutter_application_1/controller/deletePost.dart';
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   //name
-                  Text(postOwner,style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold,color:Colors.teal),overflow: TextOverflow.clip,),
+                  Text(postOwner,style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold,color:kind=='acc'?Colors.red:Colors.teal),overflow: TextOverflow.clip,),
                   //time
                   Text(postLocation+'  '+'$time',style: TextStyle(fontSize: 12,fontWeight: FontWeight.normal,color:Colors.black54),overflow: TextOverflow.clip,),
                   //Image
@@ -47,19 +50,19 @@ import 'package:flutter_application_1/controller/deletePost.dart';
                               if(likesList.contains(user!.uid)){
                                 setState(() {
                                   isliked =false;
-                                  FirebaseFirestore.instance.collection('posts').doc(postID).update({'likes': FieldValue.arrayRemove([user.uid])});
+                                  FirebaseFirestore.instance.collection(collection).doc(postID).update({'likes': FieldValue.arrayRemove([user.uid])});
                                 });
                               }else{
                                 setState(() {
                                   isliked =true;
-                                  FirebaseFirestore.instance.collection('posts').doc(postID).update({'likes': FieldValue.arrayUnion([user.uid])});
+                                  FirebaseFirestore.instance.collection(collection).doc(postID).update({'likes': FieldValue.arrayUnion([user.uid])});
                                 });
                               }
                             },
                             icon: likesList.contains(user!.uid)?Icon(Icons.warning ,color:Colors.red,size:30,):Icon(Icons.warning_amber_outlined,color:Colors.black,size: 30,)),
                         Text('${likesList.length}  warning',style: TextStyle(fontSize: 12,color: Colors.black87,fontWeight:FontWeight.normal ),), SizedBox(width: 5,),
                         //Comments Icon
-                        IconButton(onPressed: ()=>commentsWidget(context, postID), icon: Icon(Icons.comment,color: Colors.black,))
+                        IconButton(onPressed: ()=>commentsWidget(context, postID,kind), icon: Icon(Icons.comment,color: Colors.black,))
                       ],
                     ),
                   ),
@@ -76,7 +79,7 @@ import 'package:flutter_application_1/controller/deletePost.dart';
         child: Container(
           padding:EdgeInsets.fromLTRB(0, 10, 10, 0),
           alignment: Alignment.topRight,
-          child: IconButton(icon:Icon(Icons.clear,size:25,),onPressed: ()=>deletePostsDialog(context,postID)),
+          child: IconButton(icon:Icon(Icons.clear,size:25,),onPressed: ()=>deletePostsDialog(context,postID,kind,PostImage)),
         ),
       ),
     ],
@@ -85,13 +88,12 @@ import 'package:flutter_application_1/controller/deletePost.dart';
 
 final _FieldKey = GlobalKey<FormState>();
 
- commentsWidget(BuildContext context,String postId) async{
+ commentsWidget(BuildContext context,String postId, String kind) async{
 
    TextEditingController commentFieldController = new TextEditingController();
    final commentField = Form(
        key: _FieldKey,
        child: TextFormField(
-           autofocus: false,
            controller: commentFieldController,
            keyboardType: TextInputType.name,
            validator: (value) {
@@ -105,9 +107,10 @@ final _FieldKey = GlobalKey<FormState>();
            },
            textInputAction: TextInputAction.next,
            decoration: InputDecoration(
-             prefixIcon: Icon(Icons.mode_comment),
+             prefixIcon: Icon(Icons.mode_comment,color:kind=='acc'?Colors.red:Colors.teal),
              contentPadding: EdgeInsets.fromLTRB(20, 15, 20, 15),
              hintText: "Write your Comment",
+             
              border: OutlineInputBorder(
                borderRadius: BorderRadius.circular(0),
              ),
@@ -117,7 +120,7 @@ final _FieldKey = GlobalKey<FormState>();
 
 
      Stream<QuerySnapshot<Map<String, dynamic>>> stream = await FirebaseFirestore.instance.collection('comments').orderBy('commentTime').snapshots();
-    List CommentsList = await getCommetsList(postId);
+    List CommentsList = await getCommetsList(postId,kind);
    return showDialog(useSafeArea: true,
        context: context, builder: (BuildContext context)
        {
@@ -138,7 +141,7 @@ final _FieldKey = GlobalKey<FormState>();
                          case ConnectionState.waiting:
                            return new Center(child: new CircularProgressIndicator());
                          default:
-                           return new Column(children: getExpenseItems(snapshot, context,postId,CommentsList));
+                           return new Column(children: getExpenseItems(snapshot, context,postId,CommentsList,kind));
                        }
                      },),
                  ),
@@ -159,11 +162,11 @@ final _FieldKey = GlobalKey<FormState>();
                          child: Material(
                            borderRadius: BorderRadius.all(Radius.circular(5.0)),
                            elevation: 0,
-                           color: Colors.teal,
+                           color: kind=='nor'?Colors.teal:Colors.red,
                            child: MaterialButton(
                                padding: EdgeInsets.all(5),
                                onPressed: () async {
-                                 await addCommint(postId,commentFieldController.text);
+                                 await addCommint(postId,commentFieldController.text,kind);
                                  setState((){
                                    commentFieldController.clear();
                                  });
@@ -186,9 +189,12 @@ final _FieldKey = GlobalKey<FormState>();
 
 }
 
-addCommint(String postid,String postContent) async{
+addCommint(String postid,String postContent, String kind) async{
    if(_FieldKey.currentState!.validate()){
-
+     var collection ='posts';
+     if (kind == 'nor'){
+       collection = 'normalPosts';
+     }
      //comment model call
      commentModel comment = commentModel();
      User? user = FirebaseAuth.instance.currentUser;
@@ -203,11 +209,11 @@ addCommint(String postid,String postContent) async{
      var docReference = collRef.doc();
      comment.commentId = docReference.id;
      docReference.set(comment.toMap());
-     await FirebaseFirestore.instance.collection('posts').doc(postid).update({'comments': FieldValue.arrayUnion([comment.commentId])});
+     await FirebaseFirestore.instance.collection(collection).doc(postid).update({'comments': FieldValue.arrayUnion([comment.commentId])});
    }
 }
 
-  showComment(BuildContext context,String commentOwnerId,String Owner, String Content, Timestamp time,String postId,String commentId) {
+  showComment(BuildContext context,String commentOwnerId,String Owner, String Content, Timestamp time,String postId,String commentId, String kind) {
     DateTime Date = time.toDate();
     DateFormat dateFormat = DateFormat("yyyy-MM-dd HH:mm");
     String timeDate = dateFormat.format(Date);
@@ -224,7 +230,7 @@ addCommint(String postid,String postContent) async{
             visible:commentOwnerId == user!.uid?true:false,
             child: Container(
             alignment: Alignment.topRight,
-            child: IconButton(icon:Icon(Icons.clear,size:15,),onPressed: ()=>deleteDialog(context,commentId,postId)),
+            child: IconButton(icon:Icon(Icons.clear,size:15,),onPressed: ()=>deleteDialog(context,commentId,postId,kind)),
                      ),
           ),
           Container(padding:EdgeInsets.fromLTRB(0, 30, 0, 0),
@@ -234,7 +240,7 @@ addCommint(String postid,String postContent) async{
             children: [
               Container(
                 child: Text(Owner, style: TextStyle(
-                    fontSize: 20, fontWeight: FontWeight.bold, color: Colors.teal),
+                    fontSize: 20, fontWeight: FontWeight.bold, color: kind=='nor'?Colors.teal:Colors.red),
                   overflow: TextOverflow.clip,),
               ),
               Text(timeDate, style: TextStyle(fontSize: 12,
@@ -251,11 +257,11 @@ addCommint(String postid,String postContent) async{
     );
   }
 
-getExpenseItems(AsyncSnapshot<QuerySnapshot<Object?>> snapshot, BuildContext context,String postId,List commentList)  {
+getExpenseItems(AsyncSnapshot<QuerySnapshot<Object?>> snapshot, BuildContext context,String postId,List commentList, String kind)  {
   List <Widget> commets =[];
     snapshot.data?.docs.forEach((element) {
       if (commentList.contains(element['commentId'])) {
-        commets.add(showComment(context,element.get('commentOwnerId'),element.get('commentOwner'), element.get('commentContent'), element.get('commentTime'),element.get('postId'),element.get('commentId')));
+        commets.add(showComment(context,element.get('commentOwnerId'),element.get('commentOwner'), element.get('commentContent'), element.get('commentTime'),element.get('postId'),element.get('commentId'),kind));
         print(commets);
       }
     });
@@ -264,11 +270,15 @@ getExpenseItems(AsyncSnapshot<QuerySnapshot<Object?>> snapshot, BuildContext con
     }
   return commets;
 }
-Future getCommetsList(String postId)async{
-   var snap = await FirebaseFirestore.instance.collection('posts').doc(postId).get();
+Future getCommetsList(String postId, String kind)async{
+   var collection='posts';
+   if(kind =='nor'){
+     collection = 'normalPosts';
+   }
+   var snap = await FirebaseFirestore.instance.collection(collection).doc(postId).get();
    return snap.get('comments');
 }
-deleteDialog(BuildContext context,String commentId,String postId){
+deleteDialog(BuildContext context,String commentId,String postId, String kind){
   showDialog(context: context, builder: (BuildContext context) {
     return AlertDialog(
       content: Container(
@@ -290,7 +300,7 @@ deleteDialog(BuildContext context,String commentId,String postId){
                   child: MaterialButton(
                       padding: EdgeInsets.fromLTRB(20, 15, 20, 15),
                       onPressed: () {
-                        deleteComments(context, commentId, postId);
+                        deleteComments(context, commentId, postId,kind);
                         Navigator.of(context).pop();
                       },
                       child: Text(
@@ -323,12 +333,16 @@ deleteDialog(BuildContext context,String commentId,String postId){
   });
 }
 
-deleteComments(BuildContext context,String commentId,String postId) async{
-   await FirebaseFirestore.instance.collection('posts').doc(postId).update({'comments': FieldValue.arrayRemove([commentId])});
+deleteComments(BuildContext context,String commentId,String postId, String kind) async{
+   var collection ='posts';
+   if (kind == 'nor'){
+     collection = 'normalPosts';
+   }
+   await FirebaseFirestore.instance.collection(collection).doc(postId).update({'comments': FieldValue.arrayRemove([commentId])});
    await FirebaseFirestore.instance.collection('comments').doc(commentId).delete();
 }
 
-deletePostsDialog(BuildContext context ,String postId){
+deletePostsDialog(BuildContext context ,String postId, String kind, String postImage){
   showDialog(context: context, builder: (BuildContext context) {
     return AlertDialog(
       content: Container(
@@ -350,7 +364,7 @@ deletePostsDialog(BuildContext context ,String postId){
                   child: MaterialButton(
                       padding: EdgeInsets.fromLTRB(20, 15, 20, 15),
                       onPressed: () {
-                        deletePost.deletePosts(context,postId);
+                        deletePost.deletePosts(context,postId,kind,postImage);
                         Navigator.of(context).pop();
                       },
                       child: Text(

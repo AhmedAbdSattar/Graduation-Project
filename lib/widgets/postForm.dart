@@ -9,6 +9,7 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter_application_1/model/normalPosts.dart';
 import 'package:flutter_application_1/model/posts.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:path/path.dart';
@@ -488,16 +489,17 @@ List<String> sohag = [
   'Tahta',
   'Tima',
 ];
-
+List <String> accidentType = ['murder','bodily injury','theft','fraud','drug' 'trafficking','Sexual Harassment','other'];
 final _formKey = GlobalKey<FormState>();
 final title = new TextEditingController();
 final description = new TextEditingController();
 List<String> regions = [];
 var selectedGovernorate;
 var selectedregion ;
+var selectedCrimesType;
 File? _image;
 String? _url;
-showFormDialog(BuildContext context)  {
+showFormDialog(BuildContext context,String kind)  {
   return  showDialog(
       context: context,
       builder: (context) {
@@ -512,7 +514,7 @@ showFormDialog(BuildContext context)  {
                   child: Column(
                     children: [
                       DropdownButtonFormField<String>(
-                        dropdownColor: Colors.teal,
+                        dropdownColor: kind=='acc'?Colors.red:Colors.teal,
                         hint: Text('Governorate'),
                         value: selectedGovernorate,
                         isExpanded: true,
@@ -520,12 +522,11 @@ showFormDialog(BuildContext context)  {
                           if(value == null){
                             return ('Governorate required!');
                           }
-
                         } ,
                         items: gov.map((String value) {
                           return DropdownMenuItem<String>(
                             value: value,
-                            child: Text(value),
+                            child: Text(value,style: TextStyle(color:Colors.black),),
                           );
                         }).toList(),
                         onChanged: (governorate) {
@@ -595,7 +596,7 @@ showFormDialog(BuildContext context)  {
                       // gov Dropdown Ends here
                       // Region Dropdown
                       DropdownButtonFormField<String>(
-                        dropdownColor: Colors.teal,
+                        dropdownColor: kind=='acc'?Colors.red:Colors.teal,
                         hint: Text('Region'),
                         value: selectedregion,
                         validator:(value) {
@@ -607,7 +608,7 @@ showFormDialog(BuildContext context)  {
                         items: regions.map((String value) {
                           return DropdownMenuItem<String>(
                             value: value,
-                            child: Text(value),
+                            child: Text(value,style: TextStyle(color:Colors.black),),
                           );
                         }).toList(),
                         onChanged: (regionn) {
@@ -619,6 +620,33 @@ showFormDialog(BuildContext context)  {
                           });
                         },
 
+                      ),
+                      Visibility(
+                        visible: kind=='acc'?true:false,
+                        child: DropdownButtonFormField<String>(
+                          dropdownColor: kind=='acc'?Colors.red:Colors.teal,
+                    hint: Text('Accident Type'),
+                    value: selectedCrimesType,
+                    /*validator:(value) {
+                        if(value == null){
+                          return ('Accident Type required!');
+                        }
+                    } ,*/
+                    isExpanded: true,
+                    items: accidentType.map((String value) {
+                        return DropdownMenuItem<String>(
+                          value: value,
+                          child: Text(value,style: TextStyle(color:Colors.black),),
+                        );
+                    }).toList(),
+                    onChanged: (type) {
+                        if(type!.isEmpty){
+                          return ;
+                        }
+                        setState(() {
+                          selectedCrimesType = type;
+                        });
+                    },),
                       ),
                       SizedBox( height: 30),
                       TextFormField(
@@ -689,13 +717,13 @@ showFormDialog(BuildContext context)  {
                   Material(
                     elevation: 5,
                     borderRadius: BorderRadius.circular(30),
-                    color: Colors.teal,
+                    color: kind=='acc'?Colors.red:Colors.teal,
                     child: MaterialButton(
                       padding: EdgeInsets.fromLTRB(20, 15, 20, 15),
                       minWidth: MediaQuery.of(context).size.width,
                       onPressed: () async {
                          await postData(context,selectedregion,selectedGovernorate,
-                            description.text ,_image);
+                            description.text ,_image,kind,kind=='acc'?selectedCrimesType:'normal');
                          setState((){
                                 title.clear();
                                 description.clear();
@@ -736,75 +764,148 @@ showFormDialog(BuildContext context)  {
 
 }
 
-postData(BuildContext context,var locationCity,var locationTown, String description, File? image) async {
+postData(BuildContext context,var locationCity,var locationTown, String description, File? image, String kind,String crimesType) async {
   if (_formKey.currentState!.validate()) {
-if (image != null){
-  print('the image link is :$image');
-  String fileName = basename(image.path);
-  Reference firebaseStorageRef =
-  FirebaseStorage.instance.ref().child('images/$fileName');
-  await firebaseStorageRef.putFile(image);
-  _url =await firebaseStorageRef.getDownloadURL();
+    if (kind == 'acc'){
+      if (image != null){
+        print('the image link is :$image');
+        String fileName = basename(image.path);
+        Reference firebaseStorageRef =
+        FirebaseStorage.instance.ref().child('images/$fileName');
+        await firebaseStorageRef.putFile(image);
+        _url =await firebaseStorageRef.getDownloadURL();
 
-  FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
-  postModel post = postModel();
-  User? user = FirebaseAuth.instance.currentUser;
-  DocumentSnapshot<Map<String, dynamic>> data =await firebaseFirestore
-      .collection("users")
-      .doc(user!.uid).get();
-  //set values
-  post.postOwner = data.get('firstName');
-  post.postOwnerId=user.uid;
-  post.postDescription = description;
-  post.locationTown =locationTown;
-  post.locationCity = locationCity;
-  post.location=locationTown+' '+locationCity;
-  post.postTime =DateTime.now();
-  post.imageUrl=_url;
-  post.comments =[];
-  post.likes;
+        FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
+        postModel post = postModel();
+        User? user = FirebaseAuth.instance.currentUser;
+        DocumentSnapshot<Map<String, dynamic>> data =await firebaseFirestore
+            .collection("users")
+            .doc(user!.uid).get();
+        //set values
+        post.postOwner = data.get('firstName');
+        post.postOwnerId=user.uid;
+        post.postDescription = description;
+        post.locationTown =locationTown;
+        post.locationCity = locationCity;
+        post.location=locationTown+' '+locationCity;
+        post.postTime =DateTime.now();
+        post.imageUrl=_url;
+        post.comments =[];
+        post.likes;
+        post.CrimeType =crimesType;
 
-  final collRef = await firebaseFirestore.collection('posts');
-  var docReference = collRef.doc();
-  post.postId = docReference.id;
-  docReference.set(post.toMap());
-  Fluttertoast.showToast(
-      msg: "post added  successfully :) ",
-      webBgColor: "linear-gradient(to right, #2e8b57, #2e8b57)",
-      timeInSecForIosWeb: 5);
-  Navigator.of(context).pop();
+        final collRef = await firebaseFirestore.collection('posts');
+        var docReference = collRef.doc();
+        post.postId = docReference.id;
+        docReference.set(post.toMap());
+        Fluttertoast.showToast(
+            msg: "post added  successfully :) ",
+            webBgColor: "linear-gradient(to right, #2e8b57, #2e8b57)",
+            timeInSecForIosWeb: 5);
+        Navigator.of(context).pop();
 
-}else{
+      }else{
 
-  FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
-  postModel post = postModel();
-  User? user = FirebaseAuth.instance.currentUser;
-  DocumentSnapshot<Map<String, dynamic>> data =await firebaseFirestore
-      .collection("users")
-      .doc(user!.uid).get();
-  //set values
-  post.postOwner = data.get('firstName');
-  post.postOwnerId=user.uid;
-  post.postDescription = description;
-  post.locationTown =locationTown;
-  post.locationCity = locationCity;
-  post.location=locationTown+' '+locationCity;
-  post.postTime =DateTime.now();
-  post.imageUrl='notfound';
-  post.comments =[];
-  post.likes;
+        FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
+        postModel post = postModel();
+        User? user = FirebaseAuth.instance.currentUser;
+        DocumentSnapshot<Map<String, dynamic>> data =await firebaseFirestore
+            .collection("users")
+            .doc(user!.uid).get();
+        //set values
+        post.postOwner = data.get('firstName');
+        post.postOwnerId=user.uid;
+        post.postDescription = description;
+        post.locationTown =locationTown;
+        post.locationCity = locationCity;
+        post.location=locationTown+' '+locationCity;
+        post.postTime =DateTime.now();
+        post.imageUrl='notfound';
+        post.comments =[];
+        post.likes;
+        post.CrimeType =crimesType;
 
-  final collRef = await firebaseFirestore.collection('posts');
-  var docReference = collRef.doc();
-  post.postId = docReference.id;
-  docReference.set(post.toMap());
-  Fluttertoast.showToast(
-      msg: "post added  successfully :) ",
-      webBgColor: "linear-gradient(to right, #2e8b57, #2e8b57)",
-      timeInSecForIosWeb: 5);
-  Navigator.of(context).pop();
+        final collRef = await firebaseFirestore.collection('posts');
+        var docReference = collRef.doc();
+        post.postId = docReference.id;
+        docReference.set(post.toMap());
+        Fluttertoast.showToast(
+            msg: "post added  successfully :) ",
+            webBgColor: "linear-gradient(to right, #2e8b57, #2e8b57)",
+            timeInSecForIosWeb: 5);
+        Navigator.of(context).pop();
 
-}
+      }
+    }else{ // kind
+      if (image != null){
+        print('the image link is :$image');
+        String fileName = basename(image.path);
+        Reference firebaseStorageRef =
+        FirebaseStorage.instance.ref().child('images/$fileName');
+        await firebaseStorageRef.putFile(image);
+        _url =await firebaseStorageRef.getDownloadURL();
+
+        FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
+        normalpostModel normalPost = normalpostModel();
+        User? user = FirebaseAuth.instance.currentUser;
+        DocumentSnapshot<Map<String, dynamic>> data =await firebaseFirestore
+            .collection("users")
+            .doc(user!.uid).get();
+        //set values
+        normalPost.postOwner = data.get('firstName');
+        normalPost.postOwnerId=user.uid;
+        normalPost.postDescription = description;
+        normalPost.locationTown =locationTown;
+        normalPost.locationCity = locationCity;
+        normalPost.location=locationTown+' '+locationCity;
+        normalPost.postTime =DateTime.now();
+        normalPost.imageUrl=_url;
+        normalPost.comments =[];
+        normalPost.likes;
+
+        final collRef = await firebaseFirestore.collection('normalPosts');
+        var docReference = collRef.doc();
+        normalPost.postId = docReference.id;
+        docReference.set(normalPost.toMap());
+        Fluttertoast.showToast(
+            msg: "post added  successfully :) ",
+            webBgColor: "linear-gradient(to right, #2e8b57, #2e8b57)",
+            timeInSecForIosWeb: 5);
+        Navigator.of(context).pop();
+
+      }else{
+
+        FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
+        normalpostModel normalPost = normalpostModel();
+        User? user = FirebaseAuth.instance.currentUser;
+        DocumentSnapshot<Map<String, dynamic>> data =await firebaseFirestore
+            .collection("users")
+            .doc(user!.uid).get();
+        //set values
+        normalPost.postOwner = data.get('firstName');
+        normalPost.postOwnerId=user.uid;
+        normalPost.postDescription = description;
+        normalPost.locationTown =locationTown;
+        normalPost.locationCity = locationCity;
+        normalPost.location=locationTown+' '+locationCity;
+        normalPost.postTime =DateTime.now();
+        normalPost.imageUrl='notfound';
+        normalPost.comments =[];
+        normalPost.likes;
+
+        final collRef = await firebaseFirestore.collection('normalPosts');
+        var docReference = collRef.doc();
+        normalPost.postId = docReference.id;
+        docReference.set(normalPost.toMap());
+        Fluttertoast.showToast(
+            msg: "post added  successfully :) ",
+            webBgColor: "linear-gradient(to right, #2e8b57, #2e8b57)",
+            timeInSecForIosWeb: 5);
+        Navigator.of(context).pop();
+
+      }
+    }
+
 
   }
   }
