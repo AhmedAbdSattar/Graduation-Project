@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
@@ -287,7 +288,8 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
 
     FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
     User? user = _auth.currentUser;
-
+    final fcmToken = await FirebaseMessaging.instance.getToken();
+    print(fcmToken);
     UserModel userModel = UserModel();
 
     // writing all the values
@@ -295,7 +297,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
     userModel.uid = user.uid;
     userModel.firstName = firstNameEditingController.text;
     userModel.phone = phoneEditingController.text;
-
+    userModel.deviceToken=fcmToken;
     await firebaseFirestore
         .collection("users")
         .doc(user.uid)

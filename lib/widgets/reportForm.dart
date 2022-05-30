@@ -1358,59 +1358,51 @@ class _reportFormState extends State<reportForm> {
         ),
         SizedBox(height: 30),
         Container(
-          width: MediaQuery.of(context).size.width,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Container(
-                decoration: BoxDecoration( borderRadius: BorderRadius.circular(30),color: secondColor,),
-                child: MaterialButton(
-                    padding: EdgeInsets.fromLTRB(20, 15, 20, 15),
-                    onPressed: () {
-                      postDetailsToFirestoreLost();
-                      setState(() {
-                        //Match Function
-                        selectedGovernorate = null;
-                        selectedregion = null;
-                        CategorySelected = null;
-                        selectedType = null;
-                        selectedBrand = null;
-                        selectedColor = null;
-                      });
-                    },
-                    child: Text(
-                      "Report As Lost",
-                      overflow: TextOverflow.clip,
-                      textAlign: TextAlign.center,
-                      style: TextStyle(fontSize: 18, color: Colors.white),
-                    )),
-              ),
-              SizedBox(height: 10),
-              Container(
-                decoration: BoxDecoration( borderRadius: BorderRadius.circular(30),color: secondColor,),
-                child: MaterialButton(
-                    padding: EdgeInsets.fromLTRB(20, 15, 20, 15),
-                    onPressed: () {
-                      postDetailsToFirestoreFound();
-                      setState(() {
-                        //Match Function
-                        selectedGovernorate = null;
-                        selectedregion = null;
-                        CategorySelected = null;
-                        selectedType = null;
-                        selectedBrand = null;
-                        selectedColor = null;
-                      });
-                    },
-                    child: Text(
-                      "Report As Found",
-                      overflow: TextOverflow.clip,
-                      textAlign: TextAlign.center,
-                      style: TextStyle(fontSize: 18, color: Colors.white),
-                    )),
-              ),
-            ],
-          ),
+          decoration: BoxDecoration( borderRadius: BorderRadius.circular(30),color: secondColor,),
+          child: MaterialButton(
+              padding: EdgeInsets.fromLTRB(20, 15, 20, 15),
+              onPressed: () {
+                postDetailsToFirestoreLost();
+                setState(() {
+                  //Match Function
+                  selectedGovernorate = null;
+                  selectedregion = null;
+                  CategorySelected = null;
+                  selectedType = null;
+                  selectedBrand = null;
+                  selectedColor = null;
+                });
+              },
+              child: Text(
+                "Report As Lost",
+                overflow: TextOverflow.clip,
+                textAlign: TextAlign.center,
+                style: TextStyle(fontSize: 18, color: Colors.white),
+              )),
+        ),
+        SizedBox(height: 10),
+        Container(
+          decoration: BoxDecoration( borderRadius: BorderRadius.circular(30),color: secondColor,),
+          child: MaterialButton(
+              padding: EdgeInsets.fromLTRB(20, 15, 20, 15),
+              onPressed: () {
+                postDetailsToFirestoreFound();
+                setState(() {
+                  //Match Function
+                  selectedGovernorate = null;
+                  selectedregion = null;
+                  CategorySelected = null;
+                  selectedType = null;
+                  selectedBrand = null;
+                  selectedColor = null;
+                });
+              },
+              child: Text(
+                "Report As Found",
+                overflow: TextOverflow.clip,
+                textAlign: TextAlign.center,
+                style: TextStyle(fontSize: 18, color: Colors.white),
+              )),
         ),
       ],
     );

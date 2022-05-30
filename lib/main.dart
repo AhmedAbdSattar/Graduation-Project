@@ -3,7 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_1/view/posts.dart';
 
 import 'view/login.dart';
-
+//id of app one signal
+//3f46a4e8-a914-4a74-91e5-6d00d1cdfea5
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
@@ -17,8 +18,8 @@ void main() async {
      ),*/
   );
   runApp(MyApp());
-}
 
+}
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override

@@ -35,6 +35,7 @@ dependencies:
   async: ^2.8.2
   rxdart: ^0.27.3
   firebase_storage: ^10.2.12
+  firebase_messaging: ^11.4.1
   image_picker: ^0.8.5
   intl: ^0.17.0
   flutter:
