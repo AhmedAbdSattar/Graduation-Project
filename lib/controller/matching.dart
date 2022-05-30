@@ -1,7 +1,10 @@
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_application_1/model/foundReports.dart';
 import 'package:flutter_application_1/model/lostReports.dart';
+
+import 'Notify.dart';
 
 class matchingAlgorithem {
   User? user = FirebaseAuth.instance.currentUser;
@@ -22,6 +25,7 @@ class matchingAlgorithem {
             doc["serialnumber"] == report.serialnumber &&
             doc["location"] == report.location) {
           ids.add(doc["userid"]);
+          sendNotification(doc["userid"],doc["itemtype"]);
           mainstatus = true;
           //update all equals
           FirebaseFirestore.instance
@@ -54,6 +58,7 @@ class matchingAlgorithem {
             doc["serialnumber"] == report.serialnumber &&
             doc["location"] == report.location) {
           ids.add(doc["userid"]);
+          sendNotification(doc["userid"],doc["itemtype"]);
           mainstatus = true;
           //update all equals
           FirebaseFirestore.instance
@@ -68,4 +73,10 @@ class matchingAlgorithem {
           .update({'status': mainstatus, 'matchesLids': ids});
     });
   }
+}
+
+sendNotification(String userid,String item) async {
+  var snap = await FirebaseFirestore.instance.collection('users').doc(userid).get();
+  var token = snap.get('deviceToken');
+  callOnFcmApiSendPushNotifications(title:'REPORT MATCHED' ,body:'your $item report matched' ,Token:token);
 }

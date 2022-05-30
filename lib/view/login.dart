@@ -1,5 +1,8 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/controller/Notify.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
 import 'home.dart';
@@ -92,8 +95,9 @@ class _LoginScreenState extends State<LoginScreen> {
       child: MaterialButton(
           padding: EdgeInsets.fromLTRB(20, 15, 20, 15),
           minWidth: MediaQuery.of(context).size.width,
-          onPressed: () {
+          onPressed: () async{
             signIn(emailController.text, passwordController.text);
+            //callOnFcmApiSendPushNotifications(Token:'dewq5mD2S8WxBQtVSEZucg:APA91bFqwOy0MmOokyXcq0sidzT8bo3F5vdfx-vkh-KGc0_wNL2rT-SiVRLPLHcJuKt8zC8kQ9SI37gjhAKMM9_KOh-UMWEFfKgzyNpjxoVRU0hOJQfoJfvp_o3WdZLFToxinynDD1IM',body:'hi',title:'hello');
           },
           child: const Text(
             "Login",
@@ -168,6 +172,7 @@ class _LoginScreenState extends State<LoginScreen> {
         await _auth
             .signInWithEmailAndPassword(email: email, password: password)
             .then((uid) => {
+                  UpdateToken(),
                   Fluttertoast.showToast(
                       msg: "Login Successful",
                       webBgColor: "linear-gradient(to right, #2e8b57, #2e8b57)",
@@ -203,5 +208,12 @@ class _LoginScreenState extends State<LoginScreen> {
         print(error.code);
       }
     }
+  }
+
+   UpdateToken() async{
+    var user = _auth.currentUser ;
+    final fcmToken = await FirebaseMessaging.instance.getToken();
+    FirebaseFirestore.instance.collection('users').doc(user!.uid).update({'deviceToken':fcmToken});
+    print('token is $fcmToken') ;
   }
 }
